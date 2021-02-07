@@ -3,17 +3,17 @@ custom_seed = 0;
 nBranches = 4;
 // set the random snowflake seed
 seed = (custom_seed==0) ? random_seed : custom_seed;
-maxSteps=10*1;
-randomWidth = rands(25,55,maxSteps,seed);
-randomDepth = rands(1,4, maxSteps, seed);
+maxSteps=100*1;
+randomWidth = rands(15,55,maxSteps,seed);
+randomDepth = rands(1,6, maxSteps, seed);
 randomSymmetry = rands(-2,2, seed);
-branchLength = 40;
+branchLength = rands(30, 40, seed)[0];
 branchThickness = 2;
 
-raisinBoxWidth = 35;
-raisinBoxDepth = 15;
-raisinBoxHeight = 45;
-rw = 0;
+raisinBoxWidth = 36;
+raisinBoxDepth = 18;
+raisinBoxHeight = 48;
+
 echo(seed);
 
 module snowflakyfy(){
@@ -22,13 +22,13 @@ module snowflakyfy(){
             children();
 }
 
-module singleBranch(rw){
+module singleBranch(){
     translate([0, -0.5*2*branchThickness, 0])
         cube([branchLength, 2*branchThickness, branchThickness]);
     
     for (i = [0:nBranches]){  
         translate([branchLength/10 + branchLength/nBranches* i, 0, 0])
-            secundaryBranche(randomWidth[rw], i*branchThickness, 0);
+            secundaryBranche(randomWidth[i], randomDepth[i], 0);
     }
 
 }
@@ -51,7 +51,7 @@ module secundaryBranche(size, thickness, half){
 
 }
 
-module drawSnowflake(rw){    
+module drawSnowflake(){    
     //cylinder(d=6, $fn=6);
     bt = 2;
     difference(){
@@ -60,7 +60,7 @@ module drawSnowflake(rw){
                 cube([raisinBoxWidth+bt, raisinBoxDepth+bt, 10]);
             }        
             snowflakyfy()
-                singleBranch(rw);
+                singleBranch();
         }
         translate([-raisinBoxWidth/2, -raisinBoxDepth/2, 0]){
             cube([raisinBoxWidth, raisinBoxDepth, raisinBoxHeight]);
@@ -68,4 +68,4 @@ module drawSnowflake(rw){
     }
 }
 
-drawSnowflake(rw);
+drawSnowflake();
